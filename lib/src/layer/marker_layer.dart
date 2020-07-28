@@ -6,8 +6,7 @@ import 'package:latlong/latlong.dart';
 
 class MarkerLayerOptions extends LayerOptions {
   final List<Marker> markers;
-  MarkerLayerOptions({this.markers = const [], rebuild})
-      : super(rebuild: rebuild);
+  MarkerLayerOptions({this.markers = const [], rebuild}) : super(rebuild: rebuild);
 }
 
 class Anchor {
@@ -125,13 +124,10 @@ class MarkerLayer extends StatelessWidget {
         var markers = <Widget>[];
         for (var markerOpt in markerOpts.markers) {
           var pos = map.project(markerOpt.point);
-          pos = pos.multiplyBy(map.getZoomScale(map.zoom, map.zoom)) -
-              map.getPixelOrigin();
+          pos = pos.multiplyBy(map.getZoomScale(map.zoom, map.zoom)) - map.getPixelOrigin();
 
-          var pixelPosX =
-              (pos.x - (markerOpt.width - markerOpt.anchor.left)).toDouble();
-          var pixelPosY =
-              (pos.y - (markerOpt.height - markerOpt.anchor.top)).toDouble();
+          var pixelPosX = (pos.x - (markerOpt.width - markerOpt.anchor.left)).toDouble();
+          var pixelPosY = (pos.y - (markerOpt.height - markerOpt.anchor.top)).toDouble();
 
           if (!_boundsContainsMarker(markerOpt)) {
             continue;
@@ -148,9 +144,15 @@ class MarkerLayer extends StatelessWidget {
           );
         }
         return Container(
-          child: Stack(
-            children: markers,
-          ),
+          child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(child: child, opacity: animation);
+              },
+              child: Stack(
+                key: ValueKey(markerOpts.markers.length),
+                children: markers,
+              )),
         );
       },
     );

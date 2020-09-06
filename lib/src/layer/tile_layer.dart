@@ -190,6 +190,7 @@ class TileLayerOptions extends LayerOptions {
   final ErrorTileCallBack errorTileCallback;
 
   TileLayerOptions({
+    Key key,
     this.urlTemplate,
     double tileSize = 256.0,
     double minZoom = 0.0,
@@ -246,7 +247,7 @@ class TileLayerOptions extends LayerOptions {
         tileSize = wmsOptions == null && retinaMode && maxZoom > 0.0
             ? (tileSize / 2.0).floorToDouble()
             : tileSize,
-        super(rebuild: rebuild);
+        super(key: key, rebuild: rebuild);
 }
 
 class WMSTileLayerOptions {
@@ -336,7 +337,7 @@ class WMSTileLayerOptions {
 class TileLayerWidget extends StatefulWidget {
   final TileLayerOptions options;
 
-  TileLayerWidget({@required this.options});
+  TileLayerWidget({@required this.options}) : super(key: options.key);
 
   @override
   State<StatefulWidget> createState() => _TileLayerWidgetState();
@@ -364,7 +365,7 @@ class TileLayer extends StatefulWidget {
     this.options,
     this.mapState,
     this.stream,
-  });
+  }) : super(key: options.key);
 
   @override
   State<StatefulWidget> createState() {
@@ -454,8 +455,6 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
         ),
       )..listen(_update);
     }
-
-    super.initState();
   }
 
   @override
@@ -936,7 +935,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
 
   void _addTile(Coords<double> coords) {
     var tileCoordsToKey = _tileCoordsToKey(coords);
-    _tiles[tileCoordsToKey] = Tile(
+    var tile = _tiles[tileCoordsToKey] = Tile(
       coords: coords,
       coordsKey: tileCoordsToKey,
       tilePos: _getTilePos(coords),
@@ -946,6 +945,8 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
           options.tileProvider.getImage(_wrapCoords(coords), options),
       tileReady: _tileReady,
     );
+
+    tile.loadTileImage();
   }
 
   void _tileReady(Coords<double> coords, dynamic error, Tile tile) {
@@ -1078,9 +1079,7 @@ class Tile implements Comparable<Tile> {
     this.active = false,
     this.retain = false,
     this.loadError = false,
-  }) {
-    loadTileImage();
-  }
+  });
 
   void loadTileImage() {
     try {

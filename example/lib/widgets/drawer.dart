@@ -5,12 +5,12 @@ import '../pages/circle.dart';
 import '../pages/custom_crs/custom_crs.dart';
 import '../pages/esri.dart';
 import '../pages/home.dart';
+import '../pages/interactive_test_page.dart';
 import '../pages/live_location.dart';
 import '../pages/map_controller.dart';
 import '../pages/marker_anchor.dart';
 import '../pages/moving_markers.dart';
 import '../pages/offline_map.dart';
-import '../pages/offline_mbtiles_map.dart';
 import '../pages/on_tap.dart';
 import '../pages/overlay_image.dart';
 import '../pages/plugin_api.dart';
@@ -129,12 +129,6 @@ Drawer buildDrawer(BuildContext context, String currentRoute) {
         ),
         _buildMenuItem(
           context,
-          const Text('Offline Map (using MBTiles)'),
-          OfflineMBTilesMapPage.route,
-          currentRoute,
-        ),
-        _buildMenuItem(
-          context,
           const Text('OnTap'),
           OnTapPage.route,
           currentRoute,
@@ -184,6 +178,12 @@ Drawer buildDrawer(BuildContext context, String currentRoute) {
             Navigator.pushReplacementNamed(
                 context, TileLoadingErrorHandle.route);
           },
+        ),
+        _buildMenuItem(
+          context,
+          const Text('Interactive flags test page'),
+          InteractiveTestPage.route,
+          currentRoute,
         ),
       ],
     ),

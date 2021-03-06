@@ -10,7 +10,6 @@ import './pages/map_controller.dart';
 import './pages/marker_anchor.dart';
 import './pages/moving_markers.dart';
 import './pages/offline_map.dart';
-import './pages/offline_mbtiles_map.dart';
 import './pages/on_tap.dart';
 import './pages/overlay_image.dart';
 import './pages/plugin_api.dart';
@@ -22,6 +21,7 @@ import './pages/tap_to_add.dart';
 import './pages/tile_loading_error_handle.dart';
 import './pages/widgets.dart';
 import './pages/wms_tile_layer.dart';
+import 'pages/interactive_test_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -48,7 +48,6 @@ class MyApp extends StatelessWidget {
         PluginScaleBar.route: (context) => PluginScaleBar(),
         PluginZoomButtons.route: (context) => PluginZoomButtons(),
         OfflineMapPage.route: (context) => OfflineMapPage(),
-        OfflineMBTilesMapPage.route: (context) => OfflineMBTilesMapPage(),
         OnTapPage.route: (context) => OnTapPage(),
         MovingMarkersPage.route: (context) => MovingMarkersPage(),
         CirclePage.route: (context) => CirclePage(),
@@ -58,6 +57,7 @@ class MyApp extends StatelessWidget {
         CustomCrsPage.route: (context) => CustomCrsPage(),
         LiveLocationPage.route: (context) => LiveLocationPage(),
         TileLoadingErrorHandle.route: (context) => TileLoadingErrorHandle(),
+        InteractiveTestPage.route: (context) => InteractiveTestPage(),
       },
     );
   }

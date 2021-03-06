@@ -14,7 +14,7 @@ class PolylineLayerOptions extends LayerOptions {
     Key key,
     this.polylines = const [],
     this.polylineCulling = false,
-    rebuild,
+    Stream<Null> rebuild,
   }) : super(key: key, rebuild: rebuild) {
     if (polylineCulling) {
       for (var polyline in polylines) {
@@ -50,7 +50,7 @@ class Polyline {
 
 class PolylineLayerWidget extends StatelessWidget {
   final PolylineLayerOptions options;
-  PolylineLayerWidget({@required this.options}) : super(key: options.key);
+  PolylineLayerWidget({Key key, @required this.options}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -150,12 +150,15 @@ class PolylinePainter extends CustomPainter {
           : paint.color = polylineOpt.color;
     }
 
-    final filterPaint = Paint()
-      ..color = polylineOpt.borderColor.withAlpha(255)
-      ..strokeWidth = polylineOpt.strokeWidth
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..blendMode = BlendMode.dstOut;
+    Paint filterPaint;
+    if (polylineOpt.borderColor != null) {
+      filterPaint = Paint()
+        ..color = polylineOpt.borderColor.withAlpha(255)
+        ..strokeWidth = polylineOpt.strokeWidth
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round
+        ..blendMode = BlendMode.dstOut;
+    }
 
     final borderPaint = polylineOpt.borderStrokeWidth > 0.0
         ? (Paint()
@@ -181,11 +184,13 @@ class PolylinePainter extends CustomPainter {
       canvas.restore();
     } else {
       paint.style = PaintingStyle.stroke;
-      filterPaint.style = PaintingStyle.stroke;
-      borderPaint?.style = PaintingStyle.stroke;
       canvas.saveLayer(rect, Paint());
       if (borderPaint != null) {
-        _paintLine(canvas, polylineOpt.offsets, borderPaint);
+        if (filterPaint != null) {
+          filterPaint.style = PaintingStyle.stroke;
+          _paintLine(canvas, polylineOpt.offsets, borderPaint);
+        }
+        borderPaint?.style = PaintingStyle.stroke;
         _paintLine(canvas, polylineOpt.offsets, filterPaint);
       }
       _paintLine(canvas, polylineOpt.offsets, paint);

@@ -7,8 +7,12 @@ import 'package:latlong/latlong.dart';
 class MarkerLayerOptions extends LayerOptions {
   final List<Marker> markers;
   final bool animate;
-  MarkerLayerOptions({this.markers = const [], rebuild, this.animate = false})
-      : super(rebuild: rebuild);
+  MarkerLayerOptions(
+      {Key key,
+      this.markers = const [],
+      Stream<Null> rebuild,
+      this.animate = false})
+      : super(key: key, rebuild: rebuild);
 }
 
 class Anchor {
@@ -93,7 +97,7 @@ class Marker {
 class MarkerLayerWidget extends StatelessWidget {
   final MarkerLayerOptions options;
 
-  MarkerLayerWidget({@required this.options}) : super(key: options.key);
+  MarkerLayerWidget({Key key, @required this.options}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

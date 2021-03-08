@@ -105,11 +105,11 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
       NetworkImageWithRetry key, DecoderCallback decode) async {
     assert(key == this);
 
-    final Stopwatch stopwatch = Stopwatch()..start();
-    final Uri resolved = Uri.base.resolve(key.url);
-    FetchInstructions instructions = await fetchStrategy(resolved, null);
+    final stopwatch = Stopwatch()..start();
+    final resolved = Uri.base.resolve(key.url);
+    var instructions = await fetchStrategy(resolved, null);
     _debugCheckInstructions(instructions);
-    int attemptCount = 0;
+    var attemptCount = 0;
     FetchFailure? lastFailure;
 
     while (!instructions.shouldGiveUp) {
@@ -119,7 +119,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
         request = await _client
             .getUrl(instructions.uri)
             .timeout(instructions.timeout!);
-        final io.HttpClientResponse response =
+        final response =
             await request.close().timeout(instructions.timeout!);
 
         if (response == null || response.statusCode != 200) {
@@ -130,19 +130,19 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
           );
         }
 
-        final _Uint8ListBuilder builder = await response
+        final builder = await response
             .fold(
               _Uint8ListBuilder(),
               (_Uint8ListBuilder buffer, List<int> bytes) => buffer..add(bytes),
             )
             .timeout(instructions.timeout!);
 
-        final Uint8List bytes = builder.data;
+        final bytes = builder.data;
 
         if (bytes.lengthInBytes == 0) return null;
 
-        final ui.Codec codec = await decode(bytes);
-        final ui.Image image = (await codec.getNextFrame()).image;
+        final codec = await decode(bytes);
+        final image = (await codec.getNextFrame()).image;
         if (image == null) return null;
 
         return ImageInfo(
@@ -311,15 +311,15 @@ class _Uint8ListBuilder {
   }
 
   void _ensureCanAdd(int byteCount) {
-    final int totalSpaceNeeded = _usedLength + byteCount;
+    final totalSpaceNeeded = _usedLength + byteCount;
 
-    int newLength = _buffer.length;
+    var newLength = _buffer.length;
     while (totalSpaceNeeded > newLength) {
       newLength *= 2;
     }
 
     if (newLength != _buffer.length) {
-      final Uint8List newBuffer = Uint8List(newLength);
+      final newBuffer = Uint8List(newLength);
       newBuffer.setAll(0, _buffer);
       newBuffer.setRange(0, _usedLength, _buffer);
       _buffer = newBuffer;
@@ -408,7 +408,7 @@ class FetchStrategyBuilder {
         );
       }
 
-      final bool isRetriableFailure =
+      final isRetriableFailure =
           transientHttpStatusCodePredicate(failure.httpStatusCode) ||
               failure.originalException is io.SocketException;
 
@@ -421,7 +421,7 @@ class FetchStrategyBuilder {
       }
 
       // Exponential back-off.
-      final Duration pauseBetweenRetries = initialPauseBetweenRetries *
+      final pauseBetweenRetries = initialPauseBetweenRetries *
           math.pow(exponentialBackoffMultiplier, failure.attemptCount - 1);
       await Future<void>.delayed(pauseBetweenRetries);
 

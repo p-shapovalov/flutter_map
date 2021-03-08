@@ -592,8 +592,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     if (level == null) {
       level = _levels[zoom] = Level();
       level.zIndex = maxZoom;
-      level.origin = map!.project(map.unproject(map.getPixelOrigin()!), zoom) ??
-          CustomPoint(0.0, 0.0);
+      level.origin = map!.project(map.unproject(map.getPixelOrigin()!), zoom);
       level.zoom = zoom;
 
       _setZoomTransform(level, map.center, map.zoom);
@@ -887,8 +886,8 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     }
 
     // create a queue of coordinates to load tiles from
-    for (num j = tileRange.min.y; j <= tileRange.max.y; j++) {
-      for (num i = tileRange.min.x; i <= tileRange.max.x; i++) {
+    for (var j = tileRange.min.y; j <= tileRange.max.y; j++) {
+      for (var i = tileRange.min.x; i <= tileRange.max.x; i++) {
         var coords = Coords(i.toDouble(), j.toDouble());
         coords.z = _tileZoom;
 

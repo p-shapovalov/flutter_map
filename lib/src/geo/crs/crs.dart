@@ -183,7 +183,7 @@ class Proj4Crs extends Crs {
     required this.infinite,
     required List<Transformation>? transformations,
     required List<double?> scales,
-  })  : assert(null != code),
+  })   : assert(null != code),
         assert(null != projection),
         assert(null != transformation || null != transformations),
         assert(null != infinite),
@@ -394,7 +394,8 @@ class _LonLat extends Projection {
 
   @override
   LatLng unproject(CustomPoint point) {
-    return LatLng(inclusiveLat(point.y as double), inclusiveLng(point.x as double));
+    return LatLng(
+        inclusiveLat(point.y as double), inclusiveLng(point.x as double));
   }
 }
 
@@ -444,7 +445,7 @@ class _Proj4Projection extends Projection {
   _Proj4Projection({
     required this.proj4Projection,
     required this.bounds,
-  })  : assert(null != proj4Projection),
+  })   : assert(null != proj4Projection),
         epsg4326 = proj4.Projection.WGS84;
 
   @override
@@ -473,14 +474,12 @@ class Transformation {
   const Transformation(this.a, this.b, this.c, this.d);
 
   CustomPoint transform(CustomPoint<num> point, double scale) {
-    scale ??= 1.0;
     var x = scale * (a * point.x + b);
     var y = scale * (c * point.y + d);
     return CustomPoint(x, y);
   }
 
   CustomPoint untransform(CustomPoint point, double scale) {
-    scale ??= 1.0;
     var x = (point.x / scale - b) / a;
     var y = (point.y / scale - d) / c;
     return CustomPoint(x, y);

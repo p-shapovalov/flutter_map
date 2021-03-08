@@ -38,8 +38,8 @@ class MapControllerImpl implements MapController {
 
   @override
   bool move(LatLng center, double zoom, {String? id}) {
-    return _state!.move(center, zoom,
-        id: id, source: MapEventSource.mapController);
+    return _state!
+        .move(center, zoom, id: id, source: MapEventSource.mapController);
   }
 
   @override
@@ -136,14 +136,16 @@ class MapState {
   CustomPoint? get size => _size;
 
   void _updateSizeByOriginalSizeAndRotation() {
-    final num originalWidth = _originalSize!.x;
-    final num originalHeight = _originalSize!.y;
+    final originalWidth = _originalSize!.x;
+    final originalHeight = _originalSize!.y;
 
     if (_rotation != 0.0) {
       final cosAngle = math.cos(_rotationRad).abs();
       final sinAngle = math.sin(_rotationRad).abs();
-      final num width = (originalWidth * cosAngle) + (originalHeight * sinAngle);
-      final num height = (originalHeight * cosAngle) + (originalWidth * sinAngle);
+      final num width =
+          (originalWidth * cosAngle) + (originalHeight * sinAngle);
+      final num height =
+          (originalHeight * cosAngle) + (originalWidth * sinAngle);
 
       _size = CustomPoint<double>(width, height);
     } else {
@@ -396,7 +398,7 @@ class MapState {
 
   double getBoundsZoom(LatLngBounds bounds, CustomPoint<double> padding,
       {bool inside = false}) {
-    var zoom = this.zoom ?? 0.0;
+    var zoom = this.zoom;
     var min = options.minZoom ?? 0.0;
     var max = options.maxZoom ?? double.infinity;
     var nw = bounds.northWest;
@@ -440,7 +442,7 @@ class MapState {
 
   double getScaleZoom(double scale, double fromZoom) {
     var crs = options.crs;
-    fromZoom = fromZoom ?? _zoom;
+    fromZoom = fromZoom;
     return crs.zoom(scale * crs.scale(fromZoom)!) as double;
   }
 

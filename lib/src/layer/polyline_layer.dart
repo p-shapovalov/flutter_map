@@ -190,7 +190,7 @@ class PolylinePainter extends CustomPainter {
           filterPaint.style = PaintingStyle.stroke;
           _paintLine(canvas, polylineOpt.offsets, borderPaint);
         }
-        borderPaint?.style = PaintingStyle.stroke;
+        borderPaint.style = PaintingStyle.stroke;
         _paintLine(canvas, polylineOpt.offsets, filterPaint);
       }
       _paintLine(canvas, polylineOpt.offsets, paint);

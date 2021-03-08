@@ -31,7 +31,7 @@ class PositionedTapDetector extends StatefulWidget {
 }
 
 class _TapPositionDetectorState extends State<PositionedTapDetector> {
-  StreamController<TapDownDetails?> _controller = StreamController();
+  final StreamController<TapDownDetails?> _controller = StreamController();
   Stream<TapDownDetails?> get _stream => _controller.stream;
   Sink<TapDownDetails?> get _sink => _controller.sink;
 
@@ -134,7 +134,7 @@ class _TapPositionDetectorState extends State<PositionedTapDetector> {
 
   Offset? _getWidgetTopLeft() {
     final translation =
-        context?.findRenderObject()?.getTransformTo(null)?.getTranslation();
+        context.findRenderObject()?.getTransformTo(null).getTranslation();
     return translation != null ? Offset(translation.x, translation.y) : null;
   }
 
@@ -171,7 +171,7 @@ class TapPosition {
   @override
   bool operator ==(dynamic other) {
     if (other is! TapPosition) return false;
-    final TapPosition typedOther = other;
+    final typedOther = other;
     return global == typedOther.global && relative == other.relative;
   }
 

@@ -22,7 +22,8 @@ class FlutterMapState extends MapGestureMixin {
   MapState? mapState;
 
   FlutterMapState(MapController? mapController)
-      : mapController = mapController as MapControllerImpl? ?? MapController() as MapControllerImpl;
+      : mapController = mapController as MapControllerImpl? ??
+            MapController() as MapControllerImpl;
 
   @override
   void didUpdateWidget(FlutterMap oldWidget) {
@@ -58,7 +59,7 @@ class FlutterMapState extends MapGestureMixin {
   }
 
   Stream<Null> _merge(LayerOptions options) {
-    if (options?.rebuild == null) return mapState!.onMoved;
+    if (options.rebuild == null) return mapState!.onMoved;
 
     var group = StreamGroup<Null>();
     group.add(mapState!.onMoved);
@@ -112,7 +113,9 @@ class FlutterMapState extends MapGestureMixin {
                             if (widget.layers != null &&
                                 widget.layers.isNotEmpty)
                               ...widget.layers.map(
-                                ((layer) => _createLayer(layer, options.plugins)!) as Widget Function(LayerOptions),
+                                ((layer) =>
+                                        _createLayer(layer, options.plugins)!)
+                                    as Widget Function(LayerOptions),
                               )
                           ],
                         ),
@@ -126,7 +129,8 @@ class FlutterMapState extends MapGestureMixin {
                         if (widget.nonRotatedLayers != null &&
                             widget.nonRotatedLayers.isNotEmpty)
                           ...widget.nonRotatedLayers.map(
-                            ((layer) => _createLayer(layer, options.plugins)!) as Widget Function(LayerOptions),
+                            ((layer) => _createLayer(layer, options.plugins)!)
+                                as Widget Function(LayerOptions),
                           )
                       ],
                     ),

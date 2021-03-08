@@ -77,6 +77,7 @@ enum AnchorAlign {
 }
 
 class Marker {
+  final Key? key;
   final LatLng? point;
   final WidgetBuilder? builder;
   final double width;
@@ -86,6 +87,7 @@ class Marker {
   Marker({
     this.point,
     this.builder,
+    this.key,
     this.width = 30.0,
     this.height = 30.0,
     AnchorPos? anchorPos,

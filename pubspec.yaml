@@ -16,7 +16,7 @@ dependencies:
   latlong: 
     git:
       url: https://github.com/p-shapovalov/dart-latlong.git  
-      ref: 42bdf38862fc5e4ded2c1fcb9c7d2579858270d1
+      ref: 8891ea32e73df4a0cf2eec74ec0707149cb1ec7e
   async: ^2.5.0
   vector_math: ^2.1.0
   proj4dart:  

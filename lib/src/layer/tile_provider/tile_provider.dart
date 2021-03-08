@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_image/network.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/src/core/network_image.dart';
 
 abstract class TileProvider {
   const TileProvider();
@@ -13,7 +13,7 @@ abstract class TileProvider {
 
   String getTileUrl(Coords coords, TileLayerOptions options) {
     var urlTemplate = (options.wmsOptions != null)
-        ? options.wmsOptions
+        ? options.wmsOptions!
             .getUrl(coords, options.tileSize.toInt(), options.retinaMode)
         : options.urlTemplate;
 
@@ -38,10 +38,10 @@ abstract class TileProvider {
     var zoom = coords.z;
 
     if (options.zoomReverse) {
-      zoom = options.maxZoom - zoom;
+      zoom = options.maxZoom - zoom!;
     }
 
-    return zoom += options.zoomOffset;
+    return zoom = zoom! + options.zoomOffset;
   }
 
   int invertY(int y, int z) {
@@ -91,7 +91,7 @@ class FileTileProvider extends TileProvider {
 class CustomTileProvider extends TileProvider {
   final String Function(Coords coors, TileLayerOptions options) customTileUrl;
 
-  const CustomTileProvider({@required this.customTileUrl});
+  const CustomTileProvider({required this.customTileUrl});
 
   @override
   String getTileUrl(Coords coords, TileLayerOptions options) {

@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/src/core/positioned_tap_detector.dart';
 import 'package:flutter_map/src/gestures/gestures.dart';
 import 'package:flutter_map/src/layer/group_layer.dart';
 import 'package:flutter_map/src/layer/overlay_image_layer.dart';
 import 'package:flutter_map/src/map/map.dart';
 import 'package:flutter_map/src/map/map_state_widget.dart';
-import 'package:positioned_tap_detector/positioned_tap_detector.dart';
 
 class FlutterMapState extends MapGestureMixin {
   final MapControllerImpl mapController;
@@ -19,16 +19,16 @@ class FlutterMapState extends MapGestureMixin {
   MapOptions get options => widget.options;
 
   @override
-  MapState mapState;
+  MapState? mapState;
 
-  FlutterMapState(MapController mapController)
-      : mapController = mapController ?? MapController();
+  FlutterMapState(MapController? mapController)
+      : mapController = mapController as MapControllerImpl? ?? MapController() as MapControllerImpl;
 
   @override
   void didUpdateWidget(FlutterMap oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    mapState.options = options;
+    mapState!.options = options;
   }
 
   @override
@@ -51,18 +51,18 @@ class FlutterMapState extends MapGestureMixin {
   @override
   void dispose() {
     _disposeStreamGroups();
-    mapState.dispose();
+    mapState!.dispose();
     mapController.dispose();
 
     super.dispose();
   }
 
   Stream<Null> _merge(LayerOptions options) {
-    if (options?.rebuild == null) return mapState.onMoved;
+    if (options?.rebuild == null) return mapState!.onMoved;
 
     var group = StreamGroup<Null>();
-    group.add(mapState.onMoved);
-    group.add(options.rebuild);
+    group.add(mapState!.onMoved);
+    group.add(options.rebuild!);
     groups.add(group);
     return group.stream;
   }
@@ -72,8 +72,8 @@ class FlutterMapState extends MapGestureMixin {
     _disposeStreamGroups();
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      mapState.setOriginalSize(constraints.maxWidth, constraints.maxHeight);
-      var size = mapState.size;
+      mapState!.setOriginalSize(constraints.maxWidth, constraints.maxHeight);
+      var size = mapState!.size!;
 
       return MapStateInheritedWidget(
         mapState: mapState,
@@ -98,12 +98,12 @@ class FlutterMapState extends MapGestureMixin {
                 child: Stack(
                   children: [
                     OverflowBox(
-                      minWidth: size.x,
-                      maxWidth: size.x,
-                      minHeight: size.y,
-                      maxHeight: size.y,
+                      minWidth: size.x as double?,
+                      maxWidth: size.x as double?,
+                      minHeight: size.y as double?,
+                      maxHeight: size.y as double?,
                       child: Transform.rotate(
-                        angle: mapState.rotationRad,
+                        angle: mapState!.rotationRad,
                         child: Stack(
                           children: [
                             if (widget.children != null &&
@@ -112,7 +112,7 @@ class FlutterMapState extends MapGestureMixin {
                             if (widget.layers != null &&
                                 widget.layers.isNotEmpty)
                               ...widget.layers.map(
-                                (layer) => _createLayer(layer, options.plugins),
+                                ((layer) => _createLayer(layer, options.plugins)!) as Widget Function(LayerOptions),
                               )
                           ],
                         ),
@@ -126,7 +126,7 @@ class FlutterMapState extends MapGestureMixin {
                         if (widget.nonRotatedLayers != null &&
                             widget.nonRotatedLayers.isNotEmpty)
                           ...widget.nonRotatedLayers.map(
-                            (layer) => _createLayer(layer, options.plugins),
+                            ((layer) => _createLayer(layer, options.plugins)!) as Widget Function(LayerOptions),
                           )
                       ],
                     ),
@@ -140,7 +140,7 @@ class FlutterMapState extends MapGestureMixin {
     });
   }
 
-  Widget _createLayer(LayerOptions options, List<MapPlugin> plugins) {
+  Widget? _createLayer(LayerOptions options, List<MapPlugin> plugins) {
     for (var plugin in plugins) {
       if (plugin.supportsLayer(options)) {
         return plugin.createLayer(options, mapState, _merge(options));

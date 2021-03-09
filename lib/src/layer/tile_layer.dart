@@ -831,7 +831,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
           if (null == _throttleUpdate) {
             _update(null);
           } else {
-            // _throttleUpdate!.add(null);
+            _throttleUpdate!.add(null);
           }
 
           _setZoomTransforms(map!.center, map!.zoom);

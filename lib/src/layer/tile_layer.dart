@@ -398,7 +398,7 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
   //ignore: unused_field
   Level? _level;
   StreamSubscription? _moveSub;
-  StreamController<LatLng>? _throttleUpdate;
+  StreamController<LatLng?>? _throttleUpdate;
   CustomPoint? _tileSize;
 
   final Map<String, Tile> _tiles = {};
@@ -467,9 +467,10 @@ class _TileLayerState extends State<TileLayer> with TickerProviderStateMixin {
     if (options.updateInterval == null) {
       _throttleUpdate = null;
     } else {
-      _throttleUpdate = StreamController<LatLng>(sync: true);
-      _throttleUpdate!.stream.transform(
-        util.throttleStreamTransformerWithTrailingCall<LatLng>(
+      _throttleUpdate = StreamController<LatLng?>(sync: true);
+
+      _throttleUpdate!.stream.transform<LatLng?>(
+        util.throttleStreamTransformerWithTrailingCall<LatLng?>(
           options.updateInterval,
         ),
       )..listen(_update);
